@@ -40,13 +40,15 @@ class GaussianNaiveBayes:
 
         class_indices = np.argmax(log_probs, axis=0)
         return self.classes[class_indices]
-    
+
+# ------------------- Confusion matrix ------------------- #
 def confusion_matrix(y_true, y_pred, num_classes):
     """
     Compute confusion matrix from true and predicted labels.
     Returns a (num_classes x num_classes) matrix where
     rows = true labels, columns = predicted labels.
     """
+    # Basically counts how often class i (rows) is predicted as class j (columns)
     cm = np.zeros((num_classes, num_classes), dtype=int)
     for t, p in zip(y_true, y_pred):
         cm[t, p] += 1
@@ -71,7 +73,7 @@ if __name__ == "__main__":
     x_test  = x_test[:TEST_SET_SIZE]
     y_test  = y_test[:TEST_SET_SIZE]
 
-    # ✅ Flatten and normalize
+    # Flatten and normalize
     x_train = x_train.reshape((x_train.shape[0], -1)) / 255.0
     x_test  = x_test.reshape((x_test.shape[0], -1)) / 255.0
 
