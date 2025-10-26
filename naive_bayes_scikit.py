@@ -4,8 +4,8 @@ from sklearn.decomposition import PCA
 from torchvision.datasets import CIFAR10
 import numpy as np
 
-TRAINING_SET_SIZE = 500;
-TEST_SET_SIZE = 100;
+TRAINING_SET_SIZE = 500
+TEST_SET_SIZE = 100
 
 # Step 1: Load the CIFAR-10 dataset
 # will download into ./data if not present
