@@ -1,37 +1,12 @@
+import numpy
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.decomposition import PCA
 from torchvision.datasets import CIFAR10
-import numpy as np
+import load_dataset as ld
+import confusion_matrix as confusion
 
-TRAINING_SET_SIZE = 500
-TEST_SET_SIZE = 100
-
-# Step 1: Load the CIFAR-10 dataset
-# will download into ./data if not present
-train_ds = CIFAR10(root='./data', train=True, download=True)
-test_ds  = CIFAR10(root='./data', train=False, download=True)
-
-# convert to numpy arrays (shape: N, 32, 32, 3)
-x_train = np.stack([np.array(img) for img, _ in train_ds])
-y_train = np.array([label for _, label in train_ds])
-
-x_test  = np.stack([np.array(img) for img, _ in test_ds])
-y_test  = np.array([label for _, label in test_ds])
-
-print(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
-
-# Step 2: Use only a subset of the data
-x_train = x_train[:TRAINING_SET_SIZE]
-y_train = y_train[:TRAINING_SET_SIZE]
-x_test = x_test[:TEST_SET_SIZE]
-y_test = y_test[:TEST_SET_SIZE]
-
-print(f"Training samples: {x_train.shape[0]}, Test samples: {x_test.shape[0]}")
-
-# Step 3: Flatten images (32x32x3 = 3072 features per image)
-x_train = x_train.reshape((x_train.shape[0], -1))
-x_test = x_test.reshape((x_test.shape[0], -1))
+x_train, y_train, x_test, y_test = ld.load_cifar_dataset()
 
 # Step 4: Normalize pixel values (optional, helps PCA and GNB)
 x_train = x_train / 255.0
@@ -53,6 +28,14 @@ gnb.fit(x_train_pca, y_train)
 y_pred = gnb.predict(x_test_pca)
 
 accuracy = accuracy_score(y_test, y_pred)
-print(f"\nTest Accuracy: {accuracy:.4f}")
-print("\nClassification Report:")
-print(classification_report(y_test, y_pred))
+print(f"\nTest accuracy: {accuracy:.4f}")
+
+cm = confusion.confusion_matrix(y_test, y_pred, num_classes=len(numpy.unique(y_test)))
+print("Confusion matrix:")
+print(cm)
+
+# Print per-class accuracy
+print("Per class accuracy:")
+class_acc = cm.diagonal() / cm.sum(axis=1)
+for i, acc in enumerate(class_acc):
+    print(f"Class {i}: {acc:.2f}")
