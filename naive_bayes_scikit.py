@@ -8,23 +8,23 @@ import confusion_matrix as confusion
 
 x_train, y_train, x_test, y_test = ld.load_cifar_dataset()
 
-# Step 4: Normalize pixel values (optional, helps PCA and GNB)
+# Normalize pixel value
 x_train = x_train / 255.0
 x_test = x_test / 255.0
 
-# Step 5: Apply PCA for dimensionality reduction
-pca_components = 50  # can tweak this (20–100 works well)
+# Apply PCA for dimensionality reduction
+pca_components = 50
 pca = PCA(n_components=pca_components, whiten=True, random_state=42)
 x_train_pca = pca.fit_transform(x_train)
 x_test_pca = pca.transform(x_test)
 
 print(f"Reduced feature size: {x_train_pca.shape[1]}")
 
-# Step 6: Train Gaussian Naive Bayes model
+# Train Gaussian Naive Bayes model
 gnb = GaussianNB()
 gnb.fit(x_train_pca, y_train)
 
-# Step 7: Predict and evaluate
+# Predict and evaluate
 y_pred = gnb.predict(x_test_pca)
 
 accuracy = accuracy_score(y_test, y_pred)

@@ -26,13 +26,14 @@ def load_cifar_dataset():
     x_test_select = []
     y_test_select = []
 
-    for c in range(10):  # classes 0–9
+    # Selecting an equal number of images of each class for teaining and testing
+    for c in range(10):  
         class_mask = numpy.where(y_train == c)[0]
         chosen = class_mask[:TRAINING_SET_SIZE]
         x_train_select.append(x_train[chosen])
         y_train_select.append(y_train[chosen])
 
-    for c in range(10):  # classes 0–9
+    for c in range(10):  
         class_mask = numpy.where(y_train == c)[0]
         chosen = class_mask[:TEST_SET_SIZE] 
         x_test_select.append(x_test[chosen])
